@@ -11,6 +11,7 @@ import updateLocale from "dayjs/plugin/updateLocale"
 import PostViewComm from "../../components/PostView/PostViewComm"
 import PostAddComment from "../../components/Feed/Post/PostAddComment"
 import PostComments from "../../components/Feed/Post/PostCommentsList"
+import PostCommentsList from "../../components/Feed/Post/PostCommentsList"
 
 const Container = styled.article`
     background-color: var(--color-secondary);
@@ -64,6 +65,7 @@ export default function PostView() {
         }
         getOnePost()
     }, [id])
+
     console.log(post.usersLiked)
     return (
         <div>
@@ -73,8 +75,8 @@ export default function PostView() {
                 <p>{dayjs(post.dateAdd).fromNow()}</p>
                 <PostViewComm post={post} setPost={setPost} />
             </Container>
-            <PostAddComment post={post} setPost={setPost} />
-            <PostComments post={post} />
+
+            <PostCommentsList post={post} />
             <Navbar />
         </div>
     )

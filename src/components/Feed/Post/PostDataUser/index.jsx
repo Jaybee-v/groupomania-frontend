@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import PostSettings from "../PostSettings"
-import { API_URL } from "../../../../utils/varibales/env_varibales"
+import { API_URL, userId } from "../../../../utils/varibales/env_varibales"
 
 const Div = styled.div`
     display: flex;
@@ -18,7 +18,6 @@ export default function PostDataUser({
     toggleClick,
 }) {
     const [user, setUser] = useState([])
-    const userId = localStorage.getItem("userId")
 
     useEffect(() => {
         async function getUser() {

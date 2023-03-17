@@ -4,8 +4,7 @@ import { EditIcon } from "../../../Shared/Icons/EditIcon"
 import axios from "axios"
 import { EditContext } from "../../../../utils/context"
 import { useContext } from "react"
-
-const API_URL = process.env.REACT_APP_API_URL
+import { API_URL } from "../../../../utils/varibales/env_varibales"
 
 const Container = styled.div`
     display: flex;

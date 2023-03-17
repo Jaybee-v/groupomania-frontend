@@ -3,8 +3,7 @@ import ProfileCard from "../../components/Profile/ProfileCard"
 import Navbar from "../../components/Shared/Navbar"
 import axios from "axios"
 import DeleteProfileButton from "../../components/Profile/DeleteProfileButton"
-
-const API_URL = process.env.REACT_APP_API_URL
+import { API_URL } from "../../utils/varibales/env_varibales"
 
 export default function Profile() {
     const userId = localStorage.getItem("userId")
@@ -25,7 +24,7 @@ export default function Profile() {
         <>
             <Navbar />
             <ProfileCard user={user} />
-            <DeleteProfileButton />
+            {/* <DeleteProfileButton /> */}
         </>
     )
 }
