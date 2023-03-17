@@ -1,5 +1,8 @@
 import styled from "styled-components"
 import SendButton from "../../Shared/SendButton"
+import axios from "axios"
+import { API_URL, userId } from "../../../utils/varibales/env_varibales"
+import { useNavigate } from "react-router-dom"
 
 const Container = styled.section`
     background-color: #fff;
@@ -14,10 +17,18 @@ const Container = styled.section`
 `
 
 export default function DeleteProfileButton() {
+    let navigate = useNavigate()
+    const handleClick = () => {
+        console.log("je fais la req")
+        axios.delete(API_URL + `/user/${userId}`)
+        navigate("/")
+    }
     return (
         <Container>
             <h4>Vous souhaitez efffacer votre compte définitivement?</h4>
-            <SendButton btnValue={"EFFACER"} />
+            <div onClick={handleClick}>
+                <SendButton btnValue={"EFFACER"} />
+            </div>
         </Container>
     )
 }

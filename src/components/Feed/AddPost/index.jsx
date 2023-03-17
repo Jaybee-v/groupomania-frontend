@@ -1,8 +1,9 @@
 import styled from "styled-components"
 import SendButton from "../../Shared/SendButton"
-import { useEffect, useState } from "react"
+import { React, useEffect, useRef, useState } from "react"
 import IMAGE from "../../../assets/icons/image-solid.svg"
 import axios from "axios"
+import { userId } from "../../../utils/varibales/env_varibales"
 
 const Container = styled.form`
     background-color: var(--color-secondary);
@@ -60,19 +61,38 @@ const API_URL = process.env.REACT_APP_API_URL
 export default function AddPost() {
     const [btnValue, setBtnValue] = useState("")
     const [content, setContent] = useState([])
+    const [image, setImage] = useState("")
+
+    const formData = new FormData()
 
     const handleContentChange = (e) => setContent(e.target.value)
 
     const handleSubmit = (e) => {
         const post = {
             post: {
-                userId: localStorage.getItem("userId"),
+                userId: userId,
                 content: content,
             },
         }
-        axios.post(API_URL + "/post/", post).then((response) => {
-            console.log(response)
-        })
+        axios
+            .post(API_URL + "/post/", formData, {
+                headers: {
+                    "content-type": "multipart/form-data",
+                },
+                params: post,
+            })
+            .then((response) => {
+                console.log(response)
+            })
+    }
+    const fileInput = useRef()
+
+    const onFileAdded = (e) => {
+        e.preventDefault()
+        const selectedFile = fileInput.current.files[0]
+        formData.append("image", selectedFile)
+
+        console.log(fileInput)
     }
 
     useEffect(() => {
@@ -91,7 +111,13 @@ export default function AddPost() {
             <DivFlex></DivFlex>
             <DivFlex>
                 <IMG src={IMAGE} alt="iconde d'une image" />
-                <Input type="file" accept="image/png, image/jpeg" />
+                <input
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    onChange={onFileAdded}
+                    ref={fileInput}
+                    name="image"
+                />
             </DivFlex>
             <SendButton
                 type="submit"
