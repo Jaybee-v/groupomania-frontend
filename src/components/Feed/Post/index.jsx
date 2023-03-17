@@ -4,9 +4,10 @@ import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import updateLocale from "dayjs/plugin/updateLocale"
 import PostComm from "./PostComm"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import PostContent from "./PostContent"
 import PostEditContent from "./PostEditContent"
+import axios from "axios"
 
 const Container = styled.article`
     background-color: var(--color-secondary);
@@ -22,6 +23,20 @@ const Container = styled.article`
 const API_URL = process.env.REACT_APP_API_URL
 
 export default function Post({ posts, post, index, setPosts }) {
+    const [commNbr, setCommNbr] = useState(0)
+
+    useEffect(() => {
+        async function getComments() {
+            try {
+                const res = await axios.get(API_URL + `/comment/${post._id}`)
+                console.log("les comments=", res)
+                setCommNbr(res.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getComments()
+    }, [post._id])
     dayjs.extend(updateLocale)
     dayjs.updateLocale("en", {
         relativeTime: {
@@ -70,7 +85,12 @@ export default function Post({ posts, post, index, setPosts }) {
                 )}
 
                 <p>{dayjs(post.dateAdd).fromNow()}</p>
-                <PostComm post={post} setPosts={setPosts} />
+                <PostComm
+                    post={post}
+                    posts={posts}
+                    commNbr={commNbr}
+                    setPosts={setPosts}
+                />
             </Container>
         </div>
 

@@ -3,6 +3,7 @@ import { HeartSolidIcon } from "../../Shared/Icons/HeartSolidIcon"
 import { HeartRegularIcon } from "../../Shared/Icons/HeartRegularIcon"
 import { CommentsIcon } from "../../Shared/Icons/CommentsIcon"
 import axios from "axios"
+import { useEffect, useState } from "react"
 
 const Container = styled.div`
     display: flex;
@@ -17,6 +18,20 @@ const Div = styled.div`
 const API_URL = process.env.REACT_APP_API_URL
 
 export default function PostViewComm({ post, setPost }) {
+    const [commNbr, setCommNbr] = useState(0)
+
+    useEffect(() => {
+        async function getComments() {
+            try {
+                const res = await axios.get(API_URL + `/comment/${post._id}`)
+                console.log("les comments=", res)
+                setCommNbr(res.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getComments()
+    }, [post._id])
     const userId = localStorage.getItem("userId")
     const handleClick = (e) => {
         console.log(e.target)
@@ -64,7 +79,7 @@ export default function PostViewComm({ post, setPost }) {
                 <Div style={{ width: "20px", marginRight: "8px" }}>
                     <CommentsIcon />
                 </Div>
-                <p>{post.commentsNumber}</p>
+                <p>{commNbr.length}</p>
             </Div>
         </Container>
     )

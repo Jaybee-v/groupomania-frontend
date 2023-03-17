@@ -5,11 +5,12 @@ import { useSearchParams } from "react-router-dom"
 import styled from "styled-components"
 import PostDataUser from "../../components/Feed/Post/PostDataUser"
 import PostContent from "../../components/Feed/Post/PostContent"
-import PostComm from "../../components/Feed/Post/PostComm"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import updateLocale from "dayjs/plugin/updateLocale"
 import PostViewComm from "../../components/PostView/PostViewComm"
+import PostAddComment from "../../components/Feed/Post/PostAddComment"
+import PostComments from "../../components/Feed/Post/PostCommentsList"
 
 const Container = styled.article`
     background-color: var(--color-secondary);
@@ -72,6 +73,8 @@ export default function PostView() {
                 <p>{dayjs(post.dateAdd).fromNow()}</p>
                 <PostViewComm post={post} setPost={setPost} />
             </Container>
+            <PostAddComment post={post} setPost={setPost} />
+            <PostComments post={post} />
             <Navbar />
         </div>
     )

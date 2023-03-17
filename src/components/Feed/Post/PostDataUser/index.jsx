@@ -2,8 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import PostSettings from "../PostSettings"
-
-const API_URL = process.env.REACT_APP_API_URL
+import { API_URL } from "../../../../utils/varibales/env_varibales"
 
 const Div = styled.div`
     display: flex;

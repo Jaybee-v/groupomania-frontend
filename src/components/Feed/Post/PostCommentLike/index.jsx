@@ -1,11 +1,9 @@
 import styled from "styled-components"
-import { HeartRegularIcon } from "../../../Shared/Icons/HeartRegularIcon"
-import { CommentsIcon } from "../../../Shared/Icons/CommentsIcon"
-import { HeartSolidIcon } from "../../../Shared/Icons/HeartSolidIcon"
-import axios from "axios"
+import { userId, API_URL } from "../../../../utils/varibales/env_varibales"
 import { useState } from "react"
-
-const API_URL = process.env.REACT_APP_API_URL
+import axios from "axios"
+import { HeartRegularIcon } from "../../../Shared/Icons/HeartRegularIcon"
+import { HeartSolidIcon } from "../../../Shared/Icons/HeartSolidIcon"
 
 const Container = styled.div`
     display: flex;
@@ -16,11 +14,10 @@ const Div = styled.div`
     display: flex;
 `
 
-export default function PostComm({ post, commNbr, posts }) {
-    const userId = localStorage.getItem("userId")
-    const [like, setLike] = useState(post.likes)
+export default function PostCommentLike({ comment }) {
+    const [like, setLike] = useState(comment.likes)
     const [likeActive, setLikeActive] = useState(
-        post.usersLiked.includes(userId)
+        comment.usersLiked.includes(userId)
     )
 
     const handleClick = () => {
@@ -39,10 +36,10 @@ export default function PostComm({ post, commNbr, posts }) {
             like: 0,
             userId: userId,
         }
-        if (post.usersLiked.includes(userId)) {
-            axios.put(API_URL + `/post/like/${post._id}`, removeLike)
+        if (comment.usersLiked.includes(userId)) {
+            axios.put(API_URL + `/comment/like/${comment._id}`, removeLike)
         } else {
-            axios.put(API_URL + `/post/like/${post._id}`, addLike)
+            axios.put(API_URL + `/comment/like/${comment._id}`, addLike)
         }
     }
 
@@ -66,16 +63,6 @@ export default function PostComm({ post, commNbr, posts }) {
                 ) : (
                     <p>{like}</p>
                 )}
-            </Div>
-            <Div
-                onClick={(e) => {
-                    document.location.href = `/post?id=${post._id}`
-                }}
-            >
-                <div style={{ width: "20px", marginRight: "8px" }}>
-                    <CommentsIcon />
-                </div>
-                <p>{commNbr.length}</p>
             </Div>
         </Container>
     )
