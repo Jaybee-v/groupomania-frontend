@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import PostContent from "./PostContent"
 import PostEditContent from "./PostEditContent"
 import axios from "axios"
+import { PostImage } from "./PostImage"
 
 const Container = styled.article`
     background-color: var(--color-secondary);
@@ -73,6 +74,7 @@ export default function Post({ posts, post, index, setPosts }) {
                     setPosts={setPosts}
                     toggleClick={toggleClick}
                 />
+                <PostImage post={post} />
                 {edit === "content" ? (
                     <PostContent post={post} />
                 ) : (

@@ -3,7 +3,7 @@ import SendButton from "../../Shared/SendButton"
 import { React, useEffect, useRef, useState } from "react"
 import IMAGE from "../../../assets/icons/image-solid.svg"
 import axios from "axios"
-import { userId } from "../../../utils/varibales/env_varibales"
+import { userId, API_URL } from "../../../utils/varibales/env_varibales"
 
 const Container = styled.form`
     background-color: var(--color-secondary);
@@ -56,48 +56,70 @@ const IMG = styled.img`
     }
 `
 
-const API_URL = process.env.REACT_APP_API_URL
-
 export default function AddPost() {
     const [btnValue, setBtnValue] = useState("")
-    const [content, setContent] = useState([])
+    const [content, setContent] = useState("")
     const [image, setImage] = useState("")
+    const fileInput = useRef()
 
-    const formData = new FormData()
-
-    const handleContentChange = (e) => setContent(e.target.value)
-
+    const handleContentChange = (e) => {
+        setContent(e.target.value)
+        console.log(content)
+    }
+    const fd = new FormData()
     const handleSubmit = (e) => {
+        e.preventDefault()
         const post = {
-            post: {
-                userId: userId,
-                content: content,
-            },
+            userId: userId,
+            content: content,
         }
+        fd.append("post", JSON.stringify(post))
+        console.log(fd)
+        console.log(post)
         axios
-            .post(API_URL + "/post/", formData, {
-                headers: {
+            .post(API_URL + "/post/", fd, {
+                header: {
                     "content-type": "multipart/form-data",
                 },
-                params: post,
             })
             .then((response) => {
                 console.log(response)
             })
     }
-    const fileInput = useRef()
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault()
+    //     const post = {
+    //         post: {
+    //             userId: userId,
+    //             content: content,
+    //             imageUrl: image,
+    //         },
+    //     }
+    //     console.log(post)
+    //     await axios.post(API_URL + "/post/", post).then((response) => {
+    //         console.log(response)
+    //     })
+    // }
 
     const onFileAdded = (e) => {
         e.preventDefault()
-        const selectedFile = fileInput.current.files[0]
-        formData.append("image", selectedFile)
-
         console.log(fileInput)
+        const selectedFile = fileInput.current.files[0]
+        console.log(selectedFile)
+        fd.append("image", selectedFile)
+        // const reader = new FileReader()
+        // reader.onload = () => {
+        //     setImage(reader.result)
+        // }
+        // reader.readAsDataURL(selectedFile)
+
+        // console.log(image)
     }
 
     useEffect(() => {
         setBtnValue("Publier")
-    })
+    }, [btnValue])
     return (
         <Container onSubmit={handleSubmit}>
             <DivCol>
@@ -110,7 +132,7 @@ export default function AddPost() {
             </DivCol>
             <DivFlex></DivFlex>
             <DivFlex>
-                <IMG src={IMAGE} alt="iconde d'une image" />
+                <IMG src={IMAGE} alt="icone d'une image" />
                 <input
                     type="file"
                     accept="image/png, image/jpeg"
