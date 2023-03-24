@@ -35,9 +35,7 @@ export default function PostSettings({ post, setPosts, toggleClick }) {
             })
             .then((response) => {
                 console.log(response)
-                setPosts((prevPosts) =>
-                    prevPosts.filter((p) => p._id !== post._id)
-                )
+                document.location.reload()
             })
             .catch((err) => console.log(err))
     }

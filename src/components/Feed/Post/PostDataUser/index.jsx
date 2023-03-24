@@ -10,15 +10,19 @@ const Div = styled.div`
     padding: 5px 0 5px 5px;
 `
 
-export default function PostDataUser({
-    post,
-    setPosts,
-    status,
-    setStatus,
-    toggleClick,
-}) {
-    const [user, setUser] = useState([])
+const Avatar = styled.img`
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+`
 
+export default function PostDataUser({ post, posts, status, toggleClick }) {
+    const [user, setUser] = useState([])
+    const [isAvatar, setIsAvatar] = useState(false)
+    const [avatar, setAvatar] = useState([])
+
+    console.log("POST", post)
     useEffect(() => {
         async function getUser() {
             try {
@@ -31,19 +35,42 @@ export default function PostDataUser({
         }
         getUser()
     }, [post])
-
+    useEffect(() => {
+        const getAvatar = async () => {
+            try {
+                const res = await axios.get(API_URL + `/avatar/${user._id}`)
+                if (res.data === null) {
+                    setIsAvatar(false)
+                } else {
+                    setIsAvatar(true)
+                    setAvatar(res.data)
+                }
+                console.log("avatar", res)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getAvatar()
+    }, [user])
     return (
         <Div>
-            <p>
-                {user.name} {user.lastName}
-            </p>
+            {isAvatar ? (
+                <span>
+                    <Avatar src={avatar.imageUrl} alt="avatar" />
+                </span>
+            ) : null}
+            {user && (
+                <p>
+                    {user.name} {user.lastName}
+                </p>
+            )}
+
             {userId === post.userId ? (
                 <PostSettings
+                    posts={posts}
                     post={post}
-                    setPosts={setPosts}
                     user={user}
                     status={status}
-                    setStatus={setStatus}
                     toggleClick={toggleClick}
                 />
             ) : null}

@@ -70,6 +70,7 @@ export default function Post({ posts, post, index, setPosts }) {
         <div>
             <Container>
                 <PostDataUser
+                    posts={posts}
                     post={post}
                     setPosts={setPosts}
                     toggleClick={toggleClick}

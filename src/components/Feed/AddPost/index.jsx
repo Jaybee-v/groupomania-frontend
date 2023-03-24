@@ -3,7 +3,7 @@ import SendButton from "../../Shared/SendButton"
 import { React, useEffect, useRef, useState } from "react"
 import IMAGE from "../../../assets/icons/image-solid.svg"
 import axios from "axios"
-import { userId, API_URL } from "../../../utils/varibales/env_varibales"
+import { API_URL } from "../../../utils/varibales/env_varibales"
 
 const Container = styled.form`
     background-color: var(--color-secondary);
@@ -59,7 +59,6 @@ const IMG = styled.img`
 export default function AddPost() {
     const [btnValue, setBtnValue] = useState("")
     const [content, setContent] = useState("")
-    const [image, setImage] = useState("")
     const fileInput = useRef()
 
     const handleContentChange = (e) => {
@@ -67,8 +66,8 @@ export default function AddPost() {
         console.log(content)
     }
     const fd = new FormData()
+    const userId = localStorage.getItem("userId")
     const handleSubmit = (e) => {
-        e.preventDefault()
         const post = {
             userId: userId,
             content: content,
@@ -86,35 +85,12 @@ export default function AddPost() {
                 console.log(response)
             })
     }
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault()
-    //     const post = {
-    //         post: {
-    //             userId: userId,
-    //             content: content,
-    //             imageUrl: image,
-    //         },
-    //     }
-    //     console.log(post)
-    //     await axios.post(API_URL + "/post/", post).then((response) => {
-    //         console.log(response)
-    //     })
-    // }
-
     const onFileAdded = (e) => {
         e.preventDefault()
         console.log(fileInput)
         const selectedFile = fileInput.current.files[0]
         console.log(selectedFile)
         fd.append("image", selectedFile)
-        // const reader = new FileReader()
-        // reader.onload = () => {
-        //     setImage(reader.result)
-        // }
-        // reader.readAsDataURL(selectedFile)
-
-        // console.log(image)
     }
 
     useEffect(() => {
