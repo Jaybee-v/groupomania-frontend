@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { API_URL } from "../../../utils/varibales/env_varibales"
 import SendButton from "../../Shared/SendButton"
 import Modal from "../../Shared/Modal"
+import ModalFile from "../../Shared/ModalFile"
 
 const Container = styled.section`
     background-color: #fff;
@@ -38,6 +39,7 @@ const Form = styled.form`
 
 export default function ProfileCard({ user }) {
     const [modalOpen, setModalOpen] = useState(false)
+    const [modalEditOpen, setModalEditOpen] = useState(false)
     const [isAvatar, setIsAvatar] = useState(false)
     const [avatar, setAvatar] = useState([])
     const fileInput = useRef()
@@ -78,22 +80,7 @@ export default function ProfileCard({ user }) {
                 console.log(response)
             })
     }
-    const handleUpdateAvatar = (e) => {
-        e.preventDefault()
-        const avatar = {
-            userId: userId,
-        }
-        fd.append("avatar", JSON.stringify(avatar))
-        axios
-            .put(API_URL + `/avatar/${avatar._id}`, fd, {
-                header: {
-                    "content-type": "multipart/form-data",
-                },
-            })
-            .then((response) => {
-                console.log(response)
-            })
-    }
+
     const onFileAdded = (e) => {
         e.preventDefault()
         console.log(fileInput)
@@ -125,12 +112,6 @@ export default function ProfileCard({ user }) {
                 <div>
                     <Avatar src={avatar.imageUrl} alt="avatar" />
                     <Form>
-                        <div>
-                            <SendButton
-                                type="submit"
-                                btnValue={"Modifier avatar"}
-                            />
-                        </div>
                         <div
                             onClick={(e) => {
                                 e.preventDefault()
@@ -139,14 +120,6 @@ export default function ProfileCard({ user }) {
                         >
                             <SendButton type="submit" btnValue={"Supprimer"} />
                         </div>
-                        <input
-                            style={{ marginTop: "20px" }}
-                            type="file"
-                            accept="image/png, image/jpeg"
-                            onChange={onFileAdded}
-                            ref={fileInput}
-                            name="image"
-                        />
                     </Form>
                 </div>
             ) : (

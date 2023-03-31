@@ -28,7 +28,7 @@ const API_URL = process.env.REACT_APP_API_URL
 export default function PostEditContent({ posts, post, setEdit, setPosts }) {
     const token = localStorage.getItem("token")
     const userId = localStorage.getItem("userId")
-    const [value, setValue] = useState("")
+    const [value, setValue] = useState(post.content)
 
     const handleChange = (e) => {
         setValue(e.target.value)
@@ -54,7 +54,7 @@ export default function PostEditContent({ posts, post, setEdit, setPosts }) {
     }
     return (
         <Form onSubmit={handleSubmit}>
-            <Input type="text" onChange={handleChange} />
+            <Input type="text" value={value} onChange={handleChange} />
             <Btn type="submit" style={{ width: "18px" }}>
                 <EditIcon fill={"var(--color-secondary)"} />
             </Btn>
