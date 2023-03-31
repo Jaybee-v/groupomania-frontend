@@ -21,6 +21,7 @@ export default function PostDataUser({ post, posts, status, toggleClick }) {
     const [user, setUser] = useState([])
     const [isAvatar, setIsAvatar] = useState(false)
     const [avatar, setAvatar] = useState([])
+    const [role, setRole] = useState(localStorage.getItem("role"))
 
     console.log("POST", post)
     useEffect(() => {
@@ -65,7 +66,7 @@ export default function PostDataUser({ post, posts, status, toggleClick }) {
                 </p>
             )}
 
-            {userId === post.userId ? (
+            {userId === post.userId || role === "admin" ? (
                 <PostSettings
                     posts={posts}
                     post={post}

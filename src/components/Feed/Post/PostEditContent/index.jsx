@@ -26,6 +26,7 @@ const Btn = styled.button`
 const API_URL = process.env.REACT_APP_API_URL
 
 export default function PostEditContent({ posts, post, setEdit, setPosts }) {
+    const token = localStorage.getItem("token")
     const userId = localStorage.getItem("userId")
     const [value, setValue] = useState("")
 
@@ -37,13 +38,19 @@ export default function PostEditContent({ posts, post, setEdit, setPosts }) {
             content: value,
             userId: userId,
         }
-        axios.put(API_URL + `/post/${post._id}`, data).then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-                setEdit("content")
-                setPosts(posts)
-            }
-        })
+        axios
+            .put(API_URL + `/post/${post._id}`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((res) => {
+                console.log(res)
+                if (res.status === 200) {
+                    setEdit("content")
+                    setPosts(posts)
+                }
+            })
     }
     return (
         <Form onSubmit={handleSubmit}>

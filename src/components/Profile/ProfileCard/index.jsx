@@ -13,8 +13,7 @@ const Container = styled.section`
     padding: 10px;
     border-radius: 10px;
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    flex-direcion: column;
 `
 const Round = styled.div`
     width: 90px;
@@ -37,13 +36,11 @@ const Form = styled.form`
 `
 
 export default function ProfileCard({ user }) {
-    const [btnValue, setBtnValue] = useState("")
     const [isAvatar, setIsAvatar] = useState(false)
     const [avatar, setAvatar] = useState([])
     const fileInput = useRef()
 
     useEffect(() => {
-        setBtnValue("Ajouter votre photo de profil")
         const getAvatar = async () => {
             try {
                 const res = await axios.get(API_URL + `/avatar/${user._id}`)
@@ -64,7 +61,6 @@ export default function ProfileCard({ user }) {
     const fd = new FormData()
     const userId = localStorage.getItem("userId")
     const handleSubmit = (e) => {
-        e.preventDefault()
         const avatar = {
             userId: userId,
         }
@@ -80,6 +76,22 @@ export default function ProfileCard({ user }) {
                 console.log(response)
             })
     }
+    const handleUpdateAvatar = (e) => {
+        e.preventDefault()
+        const avatar = {
+            userId: userId,
+        }
+        fd.append("avatar", JSON.stringify(avatar))
+        axios
+            .put(API_URL + `/avatar/${avatar._id}`, fd, {
+                header: {
+                    "content-type": "multipart/form-data",
+                },
+            })
+            .then((response) => {
+                console.log(response)
+            })
+    }
     const onFileAdded = (e) => {
         e.preventDefault()
         console.log(fileInput)
@@ -87,11 +99,32 @@ export default function ProfileCard({ user }) {
         console.log(selectedFile)
         fd.append("image", selectedFile)
     }
+
     return (
         <Container>
+            <p>
+                {user.name}
+                {" " + user.lastName}
+            </p>
+
             {isAvatar ? (
                 <div>
                     <Avatar src={avatar.imageUrl} alt="avatar" />
+                    <Form onSubmit={handleUpdateAvatar}>
+                        <SendButton
+                            type="submit"
+                            btnValue={"Modifier avatar"}
+                        />
+                        <SendButton type="submit" btnValue={"Supprimer"} />
+                        <input
+                            style={{ marginTop: "20px" }}
+                            type="file"
+                            accept="image/png, image/jpeg"
+                            onChange={onFileAdded}
+                            ref={fileInput}
+                            name="image"
+                        />
+                    </Form>
                 </div>
             ) : (
                 <Form onSubmit={handleSubmit}>
@@ -103,17 +136,9 @@ export default function ProfileCard({ user }) {
                         ref={fileInput}
                         name="image"
                     />
-                    <SendButton type="submit" btnValue={btnValue} />
+                    <SendButton type="submit" btnValue={"Ajouter avatar"} />
                 </Form>
             )}
-            <Div>
-                <p>
-                    {user.name}
-                    {" " + user.lastName}
-                </p>
-                {/* NOMBRE DE POST  */}
-                {/* DATE INSCRIPTION */}
-            </Div>
         </Container>
     )
 }

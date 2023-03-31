@@ -27,33 +27,41 @@ const API_URL = process.env.REACT_APP_API_URL
 
 export default function Login() {
     let navigate = useNavigate()
-    const [btnValue, setBtnValue] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [errorMsg, setErrorMsg] = useState("")
 
     const handleEmailChange = (e) => setEmail(e.target.value)
 
     const handlePasswordChange = (e) => setPassword(e.target.value)
 
-    const handleClick = (e) => {
+    const handleClick = async (e) => {
         e.preventDefault()
         const user = {
             email: email,
             password: password,
         }
-        axios.post(API_URL + "/user/signin", user).then((response) => {
-            console.log(response.data)
-            authService.saveToken(response.data)
-            navigate("/home")
+        await axios.post(API_URL + "/user/signin", user).then((response) => {
+            console.log("REPONSE", response)
+            switch (response.status) {
+                case 200:
+                    authService.saveToken(response.data)
+                    navigate("/home")
+                    break
+                case 401:
+                    setErrorMsg("")
+                    setErrorMsg("Mot de passe ou email incorrect...")
+                    break
+                default:
+                    setErrorMsg("")
+                    break
+            }
         })
     }
 
-    useEffect(() => {
-        setBtnValue("Se connecter")
-    })
     return (
         <Container>
-            <Form onClick={handleClick}>
+            <Form onSubmit={handleClick}>
                 <Input
                     type="text"
                     placeholder="Email"
@@ -64,8 +72,9 @@ export default function Login() {
                     placeholder="Mot de passe"
                     onChange={handlePasswordChange}
                 />
-                <SendButton btnValue={btnValue} setBtnValue={setBtnValue} />
+                <SendButton type="submit" btnValue={"Se connecter"} />
             </Form>
+            {errorMsg !== "" ? <div>{errorMsg}</div> : null}
         </Container>
     )
 }

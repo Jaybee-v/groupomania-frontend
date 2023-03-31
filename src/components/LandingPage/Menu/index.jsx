@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import styled from "styled-components"
 
 const Container = styled.div``
@@ -13,57 +12,44 @@ const List = styled.ul`
     border-radius: 20px 20px 0 0;
 `
 
-const ItemList = styled.li`
-    padding: 15px 15px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    background-color: #cccccc98;
-    color: #fff;
-    &:first-child {
-        border-radius: 20px 0 0 0;
-    }
-    &:last-child {
-        border-radius: 0 20px 0 0;
-    }
-    &.active {
-        color: var(--color-primary);
-        border: none;
-        background-color: #fff !important;
-    }
-`
-
-export default function Menu({ state, setState }) {
-    const btnSignin = document.getElementById("signin")
-    const btnSignup = document.getElementById("signup")
-    const handleClickConnect = (e) => {
+export default function Menu({ choice, setChoice }) {
+    const handleToggleMenu = (e) => {
         e.preventDefault()
-        // e.target.classList.add("active")
+        const target = e.target
+        const splitTarget = target.className.split(" ")
 
-        // btnSignup.classList.remove("active")
-
-        setState("connect")
+        if (splitTarget.includes("active")) {
+            target.classList.add("active")
+        }
     }
-    const handleClickSignup = (e) => {
-        e.preventDefault()
 
-        // btnSignin.classList.remove("active")
-
-        // e.target.classList.add("active")
-        setState("signup")
-    }
     return (
         <Container>
             <List>
-                <ItemList
+                <li
                     id="signin"
-                    className="active"
-                    onClick={handleClickConnect}
+                    className={
+                        choice === "signin" ? "itemList active" : "itemList"
+                    }
+                    onClick={() => {
+                        setChoice("signin")
+                        handleToggleMenu()
+                    }}
                 >
                     Se connecter
-                </ItemList>
-                <ItemList id="signup" onClick={handleClickSignup}>
+                </li>
+                <li
+                    id="signup"
+                    className={
+                        choice === "signup" ? "itemList active" : "itemList"
+                    }
+                    onClick={() => {
+                        setChoice("signup")
+                        handleToggleMenu()
+                    }}
+                >
                     S'inscrire
-                </ItemList>
+                </li>
             </List>
         </Container>
     )

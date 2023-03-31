@@ -21,10 +21,7 @@ const Input = styled.input`
     padding: 5px;
 `
 
-const API_URL = process.env.REACT_APP_API_URL
-
 export default function Signup() {
-    const [btnValue, setBtnValue] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [name, setName] = useState("")
@@ -38,7 +35,7 @@ export default function Signup() {
     const handleNameChange = (e) => setName(e.target.value)
     const handleLastNameChange = (e) => setLastName(e.target.value)
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const user = {
             email: email,
@@ -46,27 +43,27 @@ export default function Signup() {
             name: name,
             lastName: lastName,
         }
-        axios.post(API_URL + "/user/signup", user).then((response) => {
-            console.log(response)
-            switch (response.status) {
-                case 201:
-                    setStatus("Vous venez de créer un compte. Bienvenue!")
-                    break
-                case 400:
-                    setStatus("")
-                    setStatus(
-                        "Erreur dans votre saisie. Vérifiez que vous avez rempli tous les champs."
-                    )
-                    break
-                default:
-                    setStatus("")
-                    break
-            }
-        })
+        await axios
+            .post(process.env.REACT_APP_API_URL + "/user/signup", user)
+            .then((response) => {
+                console.log(response)
+                switch (response.status) {
+                    case 201:
+                        setStatus("Vous venez de créer un compte. Bienvenue!")
+
+                        break
+                    case 400:
+                        setStatus(
+                            "Erreur dans votre saisie. Vérifiez que vous avez rempli tous les champs."
+                        )
+                        break
+                    default:
+                        setStatus("")
+                        break
+                }
+            })
     }
-    useEffect(() => {
-        setBtnValue("S'inscrire")
-    })
+
     return (
         <Container>
             <Form onClick={handleSubmit}>
@@ -94,7 +91,7 @@ export default function Signup() {
                     onChange={handleLastNameChange}
                     required
                 />
-                <SendButton btnValue={btnValue} setBtnValue={setBtnValue} />
+                <SendButton btnValue={"S'inscrire"} />
             </Form>
 
             {status !== "" ? <div>{status}</div> : null}

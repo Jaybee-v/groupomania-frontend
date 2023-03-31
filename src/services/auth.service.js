@@ -1,6 +1,7 @@
 let saveToken = (data) => {
     localStorage.setItem("token", data.token)
     localStorage.setItem("userId", data.userId)
+    localStorage.setItem("role", data.role)
 }
 
 let isLogged = () => {

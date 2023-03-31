@@ -5,5 +5,11 @@ const Img = styled.img`
     width: 80%;
 `
 export const PostImage = ({ post }) => {
-    return <Img src={post.imageUrl} alt="postée par l'utilisateur" />
+    return (
+        <>
+            {post.imageUrl !== null ? (
+                <Img src={post.imageUrl} alt="postée par l'utilisateur" />
+            ) : null}
+        </>
+    )
 }

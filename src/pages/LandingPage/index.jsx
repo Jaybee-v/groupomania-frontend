@@ -18,12 +18,12 @@ const Container = styled.div`
 `
 
 function LandingPage() {
-    const [state, setState] = useState("")
+    const [choice, setChoice] = useState("signin")
     return (
         <Container>
             <Logo />
-            <Menu state={state} setState={setState} />
-            {state === "signup" ? <Signup /> : <Login />}
+            <Menu choice={choice} setChoice={setChoice} />
+            {choice === "signup" ? <Signup /> : <Login />}
         </Container>
     )
 }

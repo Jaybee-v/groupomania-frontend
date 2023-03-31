@@ -1,1 +1,19 @@
-
+.itemList {
+    padding: 15px 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background-color: #75707098;
+    color: #d1d0d0;
+    cursor: pointer;
+}
+.itemList:first-child {
+    border-radius: 20px 0 0 0;
+}
+.itemList:last-child {
+    border-radius: 0 20px 0 0;
+}
+.active {
+    color: var(--color-primary);
+    border: none;
+    background-color: #fff !important;
+}
