@@ -3,7 +3,7 @@ import SendButton from "../../Shared/SendButton"
 import { React, useEffect, useRef, useState } from "react"
 import IMAGE from "../../../assets/icons/image-solid.svg"
 import axios from "axios"
-import { API_URL } from "../../../utils/varibales/env_varibales"
+import { API_URL, token } from "../../../utils/varibales/env_varibales"
 
 const Container = styled.form`
     background-color: var(--color-secondary);
@@ -68,6 +68,7 @@ export default function AddPost() {
     const fd = new FormData()
     const userId = localStorage.getItem("userId")
     const handleSubmit = (e) => {
+        e.preventDefault()
         const post = {
             userId: userId,
             content: content,
@@ -77,13 +78,14 @@ export default function AddPost() {
         console.log(post)
         axios
             .post(API_URL + "/post/", fd, {
-                header: {
+                headers: {
                     "content-type": "multipart/form-data",
                 },
             })
             .then((response) => {
                 console.log(response)
             })
+        document.location.reload()
     }
     const onFileAdded = (e) => {
         e.preventDefault()

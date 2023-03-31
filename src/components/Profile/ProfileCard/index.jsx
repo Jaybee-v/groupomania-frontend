@@ -15,7 +15,8 @@ const Container = styled.section`
     padding: 10px;
     border-radius: 10px;
     display: flex;
-    flex-direcion: column;
+    flex-direction: column;
+    align-items: center;
 `
 const Round = styled.div`
     width: 90px;
@@ -23,7 +24,12 @@ const Round = styled.div`
     background-color: blue;
     border-radius: 50%;
 `
-const Div = styled.div``
+const Div = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+`
 
 const Avatar = styled.img`
     width: 90px;
@@ -35,6 +41,31 @@ const Avatar = styled.img`
 const Form = styled.form`
     display: flex;
     flex-direction: column;
+    padding: 15px 0;
+`
+
+const Name = styled.div`
+    padding-top: 10px;
+    display: flex;
+    font-size: 25px;
+`
+
+const Label = styled.p`
+    font-size: 16px;
+    font-weight: 500;
+    position: relative;
+    width: 100%;
+    padding: 10px 0 10px 5px;
+`
+
+const Text = styled.p`
+    font-size: 14px;
+`
+const Separation = styled.div`
+    width: 90%;
+    height: 1px;
+    background-color: #ccc;
+    margin: auto;
 `
 
 export default function ProfileCard({ user }) {
@@ -89,6 +120,7 @@ export default function ProfileCard({ user }) {
         fd.append("image", selectedFile)
     }
     const handleDelete = async (e) => {
+        e.preventDefault()
         await axios.delete(
             process.env.REACT_APP_API_URL + `/avatar/${avatar._id}`,
             {
@@ -99,17 +131,19 @@ export default function ProfileCard({ user }) {
         )
         setIsAvatar(false)
         setModalOpen(false)
+        document.location.reload()
     }
     console.log("AVATAR", avatar)
     return (
         <Container>
-            <p>
+            <Name>
                 {user.name}
                 {" " + user.lastName}
-            </p>
+            </Name>
 
             {isAvatar ? (
-                <div>
+                <Div>
+                    <Label>Avatar:</Label>
                     <Avatar src={avatar.imageUrl} alt="avatar" />
                     <Form>
                         <div
@@ -121,20 +155,27 @@ export default function ProfileCard({ user }) {
                             <SendButton type="submit" btnValue={"Supprimer"} />
                         </div>
                     </Form>
-                </div>
+                </Div>
             ) : (
-                <Form onSubmit={handleSubmit}>
+                <Div>
                     <Round />
-                    <input
-                        type="file"
-                        accept="image/png, image/jpeg"
-                        onChange={onFileAdded}
-                        ref={fileInput}
-                        name="image"
-                    />
-                    <SendButton type="submit" btnValue={"Ajouter avatar"} />
-                </Form>
+                    <Form onSubmit={handleSubmit}>
+                        <input
+                            type="file"
+                            accept="image/png, image/jpeg"
+                            onChange={onFileAdded}
+                            ref={fileInput}
+                            name="image"
+                        />
+                        <SendButton type="submit" btnValue={"Ajouter avatar"} />
+                    </Form>
+                </Div>
             )}
+            <Separation></Separation>
+            <Div>
+                <Label>Email:</Label>
+                <Text>{user.email}</Text>
+            </Div>
             {modalOpen ? (
                 <Modal
                     question={
