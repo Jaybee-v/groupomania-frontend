@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import { API_URL } from "../../../utils/varibales/env_varibales"
 import SendButton from "../../Shared/SendButton"
+import Modal from "../../Shared/Modal"
 
 const Container = styled.section`
     background-color: #fff;
@@ -36,10 +37,11 @@ const Form = styled.form`
 `
 
 export default function ProfileCard({ user }) {
+    const [modalOpen, setModalOpen] = useState(false)
     const [isAvatar, setIsAvatar] = useState(false)
     const [avatar, setAvatar] = useState([])
     const fileInput = useRef()
-
+    const token = localStorage.getItem("token")
     useEffect(() => {
         const getAvatar = async () => {
             try {
@@ -99,7 +101,19 @@ export default function ProfileCard({ user }) {
         console.log(selectedFile)
         fd.append("image", selectedFile)
     }
-
+    const handleDelete = async (e) => {
+        await axios.delete(
+            process.env.REACT_APP_API_URL + `/avatar/${avatar._id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        setIsAvatar(false)
+        setModalOpen(false)
+    }
+    console.log("AVATAR", avatar)
     return (
         <Container>
             <p>
@@ -110,12 +124,21 @@ export default function ProfileCard({ user }) {
             {isAvatar ? (
                 <div>
                     <Avatar src={avatar.imageUrl} alt="avatar" />
-                    <Form onSubmit={handleUpdateAvatar}>
-                        <SendButton
-                            type="submit"
-                            btnValue={"Modifier avatar"}
-                        />
-                        <SendButton type="submit" btnValue={"Supprimer"} />
+                    <Form>
+                        <div>
+                            <SendButton
+                                type="submit"
+                                btnValue={"Modifier avatar"}
+                            />
+                        </div>
+                        <div
+                            onClick={(e) => {
+                                e.preventDefault()
+                                setModalOpen(true)
+                            }}
+                        >
+                            <SendButton type="submit" btnValue={"Supprimer"} />
+                        </div>
                         <input
                             style={{ marginTop: "20px" }}
                             type="file"
@@ -139,6 +162,16 @@ export default function ProfileCard({ user }) {
                     <SendButton type="submit" btnValue={"Ajouter avatar"} />
                 </Form>
             )}
+            {modalOpen ? (
+                <Modal
+                    question={
+                        "Êtes vous certain de vouloir supprimer votre avatar?"
+                    }
+                    valid={handleDelete}
+                    setModalOpen={setModalOpen}
+                    modalOpen={modalOpen}
+                />
+            ) : null}
         </Container>
     )
 }
